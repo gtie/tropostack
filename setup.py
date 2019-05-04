@@ -22,19 +22,23 @@ setup(
     author="tie",
     author_email="tropostack@morp.org",
 
-    description="Wrapper around the excellent Troposphere library for easy creation and management of CloudFormation stacks ",
+    description="Wrapper around the excellent Troposphere library for easy creation and management of CloudFormation stacks",
     long_description=read("README.rst"),
 
     packages=find_packages(exclude=('tests',)),
 
-    install_requires=[],
+    install_requires=[
+        'boto3',
+        'tabulate',
+        'troposphere',
+        'pyyaml',
+
+    ],
 
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
         'License :: OSI Approved :: MIT License',
         'Programming Language :: Python',
-        'Programming Language :: Python :: 2',
-        'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
