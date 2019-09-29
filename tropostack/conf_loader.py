@@ -2,7 +2,6 @@
 Configuration loading routines
 """
 from collections import Mapping
-from io import StringIO
 
 import yaml
 
@@ -13,7 +12,8 @@ def partitioned_yaml_loader(fhanlde, stack_basename):
     """
     This loader expects a file handle  to parse YAML from. The root of the YAML
     document must be a mapping. The top-level keys with simple (non-mapping)
-    values would be returned, updated with the contents of the stack-specifc
+    values would be returned, updated with the value of a mapping named the same
+    as `stack_basename`
 
     Args:
         fhandle (file): A file-handle-compatible stream
@@ -26,6 +26,7 @@ def partitioned_yaml_loader(fhanlde, stack_basename):
         tropostack.exceptions.ConfigLoadError: When configuraiton parsing fails
 
     Usage:
+    >>> import StringIO
     >>> config_src = StringIO(u'''
     ...  env: dev
     ...  region: eu-west-1

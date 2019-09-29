@@ -32,7 +32,6 @@ setup(
         'tabulate',
         'troposphere',
         'pyyaml',
-
     ],
 
     classifiers=[

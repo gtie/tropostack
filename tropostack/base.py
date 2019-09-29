@@ -68,7 +68,7 @@ class BaseStack():
         return template
 
     @property
-    def stacktags(self):
+    def tags(self):
         """Generate the stack-wide tags for CloudFormation"""
         return [
             {'Key': 'Name', 'Value': self.stackname},
@@ -100,9 +100,10 @@ class EnvStack(BaseStack):
         super().validate()
 
     @property
-    def stacktags(self):
-        parent_tags = super().stacktags
-        parent.tags.update({'Key': 'Env', 'Value': self.env})
+    def tags(self):
+        parent_tags = super().tags
+        return parent_tags + [{'Key': 'Env', 'Value': self.env}]
+
 
 
 class ReleaseEnvStack(EnvStack):
@@ -120,7 +121,6 @@ class ReleaseEnvStack(EnvStack):
         return '{}-{}-{}'.format(base_name, self.env, self.release)
 
     @property
-    def stacktags(self):
-        parent_tags = super().stacktags
-        parent.tags.update({'Key': 'Release', 'Value': self.release})
-        return parent_tags
+    def tags(self):
+        parent_tags = super().tags
+        return parent_tags + [{'Key': 'Release', 'Value': self.release}]
