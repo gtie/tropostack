@@ -1,24 +1,19 @@
 tropostack
 ==========
 
-.. image:: https://img.shields.io/pypi/v/tropostack.svg
-    :target: https://pypi.python.org/pypi/tropostack
-    :alt: Latest PyPI version
-
-.. image:: https://travis-ci.org/gtie/tropostack.png
-   :target: https://travis-ci.org/gtie/tropostack
-   :alt: Latest Travis CI build status
+[![Latest PyPI version](https://pypi.python.org/pypi/tropostack)](https://img.shields.io/pypi/v/tropostack.svg)
+[![Build Status](https://travis-ci.org/gtie/tropostack.svg?branch=master)](https://travis-ci.org/gtie/tropostack)
 
 Wrapper around the excellent Troposphere library for easy creation and management of CloudFormation stacks.
 
 Getting Started
 -----
 
-You use `tropostack` as a library for:
- - Consisteny definition of CloudFormation templates in Python code
- - Having a CLI around each stack definition
+You use `tropostack` as a library to:
+ - Consisteny define CloudFormation templates in Python code
+ - Have a CLI around each stack definition, enabling it to live as a standalone executable
  
-Here is a minimalistinc example of a stack that creates a simple DynamoDB table with a single key:
+Here is a minimalistic example of a stack that creates a DynamoDB table with a single key:
 
 ```
 #!/usr/bin/env python3
@@ -135,16 +130,14 @@ Installation
 ------------
 `pip install tropostack`
 
-Requirements
-^^^^^^^^^^^^
 
 Compatibility
 -------------
 
 Licence
 -------
+See LICENSE file.
 
 Authors
 -------
-
-`tropostack` was written by `tie <tropostack@morp.org>`_.
+`tropostack` was written by `tie <tropostack /\ morp.org>`.

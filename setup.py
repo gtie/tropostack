@@ -1,10 +1,11 @@
+#!/usr/bin/env python
 import io
 import os
 import re
 
 from setuptools import find_packages
 from setuptools import setup
-
+from distutils.util import convert_path
 
 def read(filename):
     filename = os.path.join(os.path.dirname(__file__), filename)
@@ -12,18 +13,26 @@ def read(filename):
     with io.open(filename, mode="r", encoding='utf-8') as fd:
         return re.sub(text_type(r':[a-z]+:`~?(.*?)`'), text_type(r'``\1``'), fd.read())
 
+def load_pkg_init():
+    result = {}
+    init_path = convert_path('tropostack/__init__.py')
+    with open(init_path) as init_file:
+        exec(init_file.read(), result)
+    return result
+PKG_INIT = load_pkg_init()
 
 setup(
     name="tropostack",
-    version="0.1.1",
+    version=PKG_INIT['version'],
     url="https://github.com/topostack/tropostack",
     license='MIT',
 
     author="tie",
     author_email="tropostack@morp.org",
 
-    description="Wrapper around the excellent Troposphere library for easy creation and management of CloudFormation stacks",
+    description=PKG_INIT['__doc__'],
     long_description=read("README.md"),
+    long_description_content_type='text/markdown',
 
     packages=find_packages(exclude=('tests',)),
 
