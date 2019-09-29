@@ -1,7 +1,7 @@
 tropostack
 ==========
 
-[![Latest PyPI version](https://pypi.python.org/pypi/tropostack)](https://img.shields.io/pypi/v/tropostack.svg)
+[![Latest PyPI version](https://img.shields.io/pypi/v/tropostack.svg)](https://pypi.python.org/pypi/tropostack)
 [![Build Status](https://travis-ci.org/gtie/tropostack.svg?branch=master)](https://travis-ci.org/gtie/tropostack)
 
 Wrapper around the excellent Troposphere library for easy creation and management of CloudFormation stacks.
