@@ -102,7 +102,7 @@ example-dynamodb:
 
 Now we can fire up the CloudFormation stack that would create our DynamoDB table:
 ```
-$ ./dynamodb_table.py config.yaml create
+$ ./dynamodb_table.py config.yaml apply
 Stack creation initiated for: arn:aws:cloudformation:eu-west-1:472799024263:stack/example-dynamodb-dev/2e0f8430-e2a9-11e9-bd25-0aac5439e4be
 TIMESTAMP (UTC)          RESOURCE TYPE                              RESOURCE ID                  STATUS                                   REASON
 2019-09-29 11:06:26      AWS::CloudFormation::Stack                 example-dynamodb-dev         CREATE_IN_PROGRESS                       User Initiated

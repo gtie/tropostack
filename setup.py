@@ -26,23 +26,18 @@ setup(
     version=PKG_INIT['version'],
     url="https://github.com/topostack/tropostack",
     license='MIT',
-
     author="tie",
     author_email="tropostack@morp.org",
-
-    description=PKG_INIT['__doc__'],
-    long_description=read("README.md"),
+    description=PKG_INIT['__doc__'].strip(),
     long_description_content_type='text/markdown',
-
+    long_description=read("README.md"),
     packages=find_packages(exclude=('tests',)),
-
     install_requires=[
         'boto3',
         'tabulate',
         'troposphere',
         'pyyaml',
     ],
-
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
         'License :: OSI Approved :: MIT License',

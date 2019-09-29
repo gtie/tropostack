@@ -1,6 +1,5 @@
-"""\
-tropostack - Opionated wrapper around the excellent Troposphere library for
-easy creation and management of CloudFormation stacks
+"""
+Wrapper around the Troposphere lib for CLI management of CloudFormation stacks
 """
 
 __version__ = '0.1.2'
