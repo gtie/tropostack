@@ -15,7 +15,7 @@ def read(filename):
 
 setup(
     name="tropostack",
-    version="0.1.0",
+    version="0.1.1",
     url="https://github.com/topostack/tropostack",
     license='MIT',
 
@@ -23,7 +23,7 @@ setup(
     author_email="tropostack@morp.org",
 
     description="Wrapper around the excellent Troposphere library for easy creation and management of CloudFormation stacks",
-    long_description=read("README.rst"),
+    long_description=read("README.md"),
 
     packages=find_packages(exclude=('tests',)),
 
