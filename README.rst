@@ -5,11 +5,11 @@ tropostack
     :target: https://pypi.python.org/pypi/tropostack
     :alt: Latest PyPI version
 
-.. image:: https://travis-ci.org/topostack/tropostack.png
-   :target: https://travis-ci.org/topostack/tropostack
+.. image:: https://travis-ci.org/gtie/tropostack.png
+   :target: https://travis-ci.org/gtie/tropostack
    :alt: Latest Travis CI build status
 
-Wrapper around the excellent Troposphere library for easy creation and management of CloudFormation stacks 
+Wrapper around the excellent Troposphere library for easy creation and management of CloudFormation stacks
 
 Usage
 -----
