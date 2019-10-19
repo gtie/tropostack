@@ -2,7 +2,7 @@ from io import StringIO
 
 import pytest
 
-from tropostack.conf_loader import partitioned_yaml_loader
+from tropostack.conf_loaders import partitioned_yaml_loader
 from tropostack.exceptions import ConfigLoadError
 
 VALID_CONFIG = '''

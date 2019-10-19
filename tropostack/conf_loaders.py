@@ -1,7 +1,7 @@
 """
 Configuration loading routines
 """
-from collections import Mapping
+from collections.abc import Mapping
 
 import yaml
 

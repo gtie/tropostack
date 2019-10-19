@@ -15,8 +15,9 @@ class BaseStack():
     _OUT_PREFIX = 'o_'
 
     def __init__(self, conf):
-        self.region = conf.get('region')
         self.conf = conf
+        # The only absolutely required configuration of each stack is its region
+        self.region = conf.get('region')
         self.validate()
 
     def validate(self):
@@ -26,7 +27,7 @@ class BaseStack():
         # While it is sometimes possible to proceed without a region for some
         # stacks, AWS partitions such as China require one, so it is best to
         # consistenly require it
-        if not self.region:
+        if not getattr(self, 'region'):
             raise InvalidStackError("Stack configuration is missing: region")
 
     @property
@@ -75,24 +76,25 @@ class BaseStack():
             {'Key': 'BaseName', 'Value': self.BASE_NAME},
         ]
 
+class ZeroConfStack(BaseStack):
+    CONF = {}
+    def __init__(self, conf):
+        # Use the configuration attached to the class
+        super().__init__(conf=self.CONF)
+        
+    @property
+    def stackname(self):
+        return self.BASE_NAME
 
 class EnvStack(BaseStack):
 
-    def __init__(self, conf):
+    def __init__(self, conf):        
         self.env = conf.get('env')
-        super().__init__(conf)
-
-    def compose_name(self, base_name):
-        """
-        Name composition convention for non-version-keyed stacks. Used for
-        generating names of "sister" stacks as well.
-        """
-        return '{}-{}'.format(base_name, self.env)
+        super().__init__(conf=conf)
 
     @property
     def stackname(self):
-        """Main identifier"""
-        return self.compose_name(self.BASE_NAME)
+        return '{}-{}'.format(self.BASE_NAME, self.env)
 
     def validate(self):
         if not self.env:
@@ -117,8 +119,9 @@ class ReleaseEnvStack(EnvStack):
             raise InvalidStackError("Stack configiration is missing: release")
         super().validate()
 
-    def compose_name(self, base_name):
-        return '{}-{}-{}'.format(base_name, self.env, self.release)
+    @property
+    def stackname(self):
+        return '{}-{}-{}'.format(self.BASE_NAME, self.env, self.release)
 
     @property
     def tags(self):

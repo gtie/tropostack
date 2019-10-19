@@ -6,13 +6,27 @@ import botocore
 import boto3
 import tabulate
 
-from .conf_loader import partitioned_yaml_loader
+from .conf_loaders import partitioned_yaml_loader
 
-
-class EnvCLI():
-    CONF_FUNC = partitioned_yaml_loader
+class ZeroConfCLI():
+    """
+    TropostackCLI that doesn't take any configuration. All variables need
+    to be hardcoded in the Tropostack class.
+    """
     _CMD_PREFIX = 'cmd_'
 
+    def __init__(self, stack_cls):
+        """Initialize the class and te_terun it as a CLI command"""
+        # Parse the CLI arguments
+        self.args = self.argparser().parse_args()
+        # Instantiate the Tropostack instance
+        self.stack = stack_cls(conf={})
+        # Save a shortcut to the stack name
+        self.stackname = self.stack.stackname
+        # Save the command method picked via CLI
+        self.run_method = getattr(self, self._CMD_PREFIX + self.args.command)
+
+    # CLI Management
     def argparser(self):
         """Generate the ArgumentParser instance to parse CLI arguments"""
         parser = argparse.ArgumentParser()
@@ -22,30 +36,17 @@ class EnvCLI():
                       if mth.startswith(self._CMD_PREFIX)
                       and callable(getattr(self, mth))
                       ]
-        parser.add_argument('conf_file', type=argparse.FileType('r'))
         parser.add_argument('command',  choices=class_cmds)
         return parser
-
-    def __init__(self, stack_cls):
-        """Initialize the class and run it as a CLI command"""
-        # Parse the CLI arguments
-        self.args = self.argparser().parse_args()
-        # Use the loader function to render a config based on the CLI config
-        # Translates as "from this file,  extract the config for BASE_NAME"
-        self.conf = self.__class__.CONF_FUNC(
-            self.args.conf_file, stack_cls.BASE_NAME,)
-        # Generate a stack instance using the rendered config
-        self.stack = stack_cls(self.conf)
-        # Create a shortcut to the stackname
-        self.stackname = self.stack.stackname
-        # Run the command method invoked by the user
-        method = getattr(self, self._CMD_PREFIX + self.args.command)
-        method()
-
-    def cmd_generate(self):
-        """Print the generated stack out"""
-        print(self.stack.compile().to_yaml())
-
+        
+    def run(self):
+        """
+        Let the CLI command take over.
+        """
+        self.run_method()
+        
+    # CloudFormation helper funcs
+    
     def _aws_stack(self, cfn, exc=True):
         """
         Wrapper around boto3.describe_stacks. Raises RuntimeError if `exc` is
@@ -59,8 +60,16 @@ class EnvCLI():
             else:
                 return {}
         return resp['Stacks'][0]
+    
+    def _cfn_conn(self):
+        """
+        Wrapper around CloudFormation connection establishing.
+        
+        Takes a region from the stack instance, if available.
+        """
+        return boto3.client('cloudformation', region_name=self.stack.region)
+        
 
-    # Command-line functionality goes below
     def print_status_while(self, cfn, status, poll_sec=10):
         """
         Keep on polling and printing stack events while the stack is in the
@@ -101,6 +110,12 @@ class EnvCLI():
             if self._aws_stack(cfn, exc=False).get('StackStatus') != status:
                 break
             time.sleep(poll_sec)
+            
+    # Base CloudFormation commands
+    def cmd_generate(self):
+        """Print out the generated stack"""
+        print(self.stack.compile().to_yaml())
+
 
     def cmd_validate(self):
         """Validates the generated stack against the CloudFormation API"""
@@ -196,3 +211,28 @@ class EnvCLI():
             self.cmd_update(exc_on_noop=False)
         else:
             self.cmd_create()
+
+   
+class EnvCLI(ZeroConfCLI):
+    CONF_FUNC = partitioned_yaml_loader
+        
+    def __init__(self, stack_cls):
+        """Initialize the class and run it as a CLI command"""
+        # Parse the CLI arguments
+        self.args = self.argparser().parse_args()
+        # Use the loader function to render a config based on the CLI config
+        # Translates as "from this file,  extract the config for BASE_NAME"
+        self.conf = self.__class__.CONF_FUNC(
+            self.args.conf_file, stack_cls.BASE_NAME,)
+        # Generate a stack instance using the rendered config
+        self.stack = stack_cls(self.conf)
+        # Create a shortcut to the stackname
+        self.stackname = self.stack.stackname
+        # Run the command method invoked by the user
+        self.run_method = getattr(self, self._CMD_PREFIX + self.args.command)
+
+    def argparser(self):
+        """Add parameter for config file"""
+        parser = super().argparser()
+        parser.add_argument('conf_file', type=argparse.FileType('r'))
+        return parser  
