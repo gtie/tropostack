@@ -38,15 +38,15 @@ class InlineConfCLI():
                       ]
         parser.add_argument('command',  choices=class_cmds)
         return parser
-        
+
     def run(self):
         """
         Let the CLI command take over.
         """
         self.run_method()
-        
+
     # CloudFormation helper funcs
-    
+
     def _aws_stack(self, cfn, exc=True):
         """
         Wrapper around boto3.describe_stacks. Raises RuntimeError if `exc` is
@@ -60,15 +60,15 @@ class InlineConfCLI():
             else:
                 return {}
         return resp['Stacks'][0]
-    
+
     def _cfn_conn(self):
         """
         Wrapper around CloudFormation connection establishing.
-        
+
         Takes a region from the stack instance, if available.
         """
         return boto3.client('cloudformation', region_name=self.stack.region)
-        
+
 
     def print_status_while(self, cfn, status, poll_sec=10):
         """
@@ -110,9 +110,9 @@ class InlineConfCLI():
             if self._aws_stack(cfn, exc=False).get('StackStatus') != status:
                 break
             time.sleep(poll_sec)
-            
+
     # Base CloudFormation commands
-    def cmd_generate(self):
+    def cmd_print(self):
         """Print out the generated stack"""
         print(self.stack.compile().to_yaml())
 
@@ -212,10 +212,10 @@ class InlineConfCLI():
         else:
             self.cmd_create()
 
-   
+
 class EnvCLI(InlineConfCLI):
     CONF_FUNC = partitioned_yaml_loader
-        
+
     def __init__(self, stack_cls):
         """Initialize the class and run it as a CLI command"""
         # Parse the CLI arguments
@@ -235,4 +235,4 @@ class EnvCLI(InlineConfCLI):
         """Add parameter for config file"""
         parser = super().argparser()
         parser.add_argument('conf_file', type=argparse.FileType('r'))
-        return parser  
+        return parser
