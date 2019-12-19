@@ -1,7 +1,7 @@
 from conftest import *
 
 # Stack under test
-from s3_minimal import MyS3BucketStack as Sut
+from examples.s3_bucket.s3_minimal import MyS3BucketStack as Sut
 
 def test_stack_init():
     stack = Sut({})
