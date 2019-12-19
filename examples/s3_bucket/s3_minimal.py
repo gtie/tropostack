@@ -42,5 +42,6 @@ class MyS3BucketStack(InlineConfStack):
 
 
 if __name__ == '__main__':
+    # Wrap the stack in a CLI and run it
     cli = InlineConfCLI(MyS3BucketStack)
     cli.run()
