@@ -76,7 +76,7 @@ class BaseStack():
             {'Key': 'BaseName', 'Value': self.BASE_NAME},
         ]
 
-class ZeroConfStack(BaseStack):
+class InlineConfStack(BaseStack):
     CONF = {}
     def __init__(self, conf):
         # Use the configuration attached to the class

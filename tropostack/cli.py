@@ -8,7 +8,7 @@ import tabulate
 
 from .conf_loaders import partitioned_yaml_loader
 
-class ZeroConfCLI():
+class InlineConfCLI():
     """
     TropostackCLI that doesn't take any configuration. All variables need
     to be hardcoded in the Tropostack class.
@@ -213,7 +213,7 @@ class ZeroConfCLI():
             self.cmd_create()
 
    
-class EnvCLI(ZeroConfCLI):
+class EnvCLI(InlineConfCLI):
     CONF_FUNC = partitioned_yaml_loader
         
     def __init__(self, stack_cls):
