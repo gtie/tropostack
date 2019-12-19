@@ -1,8 +1,11 @@
 Welcome to tropostack's documentation!
 ======================================
 
-.. include:: ../../README.rst
+.. toctree::
+   :maxdepth: 2
 
+   quickstart
+   examples
 
 Indices and tables
 ==================

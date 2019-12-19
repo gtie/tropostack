@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
 
+"""
+Near-minimal S3 bucket creation stack
+"""
+
 from troposphere import s3
 from troposphere import Output, Export, Sub, GetAtt
 
@@ -8,6 +12,7 @@ from tropostack.cli import InlineConfCLI
 
 
 class MyS3BucketStack(InlineConfStack):
+    """Class docstring"""
     # Name of the stack
     BASE_NAME = 'my-s3-bucket-stack'
 

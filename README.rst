@@ -7,7 +7,7 @@
    :alt: travis build status
 
 About
-=====
+-----
 
 Tropostack is a CLI/workflow library that simplifies the creation and management
 of `CloudFormation <https://aws.amazon.com/cloudformation/>`_ stacks, based on
