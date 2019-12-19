@@ -15,11 +15,11 @@ the excellent `Troposphere Project <https://github.com/cloudtools/troposphere>`_
 
 Tropostack features:
 
-  - Single stack template = single executable Python file = single CLI
-  - Support for different configuration and CLI plugins
-  - A collection of generic commands available to each stack (e.g. `create`)
-  - Support for user-defined CLI commands (e.g. `upscale`)
-  - Helper routines (e.g. locate the newest matching AMI)
+ - Single stack template = single executable Python file = single CLI
+ - Support for different configuration and CLI plugins
+ - A collection of generic commands available to each stack (e.g. `create`)
+ - Support for user-defined CLI commands (e.g. `upscale`)
+ - Helper routines (e.g. locate the newest matching AMI)
 
 Docs
 ----
@@ -172,10 +172,10 @@ Stock commands
 
 While the CLI can be expanded/customized for each individual tropostack, there are several subcommands that come out of the box:
 
-  - `print` - prints the resulting CloudFormation YAML to the screen
-  - `validate` - Sends the CloudFormation template to the AWS API for validation, and reports back result
-  - `create` - Initiates the stack creation (should only be used if the stack does not exist yet)
-  - `update` - Updates an existing stack (should only be used if the stack exists)
-  - `apply` - Idempotently updates or creates a stack, based on whether it exists or not
-  - `outputs` - Shows the outputs of an existing stack
-  - `delete` - Deletes an existing stack
+ - `print` - prints the resulting CloudFormation YAML to the screen
+ - `validate` - Sends the CloudFormation template to the AWS API for validation, and reports back result
+ - `create` - Initiates the stack creation (should only be used if the stack does not exist yet)
+ - `update` - Updates an existing stack (should only be used if the stack exists)
+ - `apply` - Idempotently updates or creates a stack, based on whether it exists or not
+ - `outputs` - Shows the outputs of an existing stack
+ - `delete` - Deletes an existing stack
