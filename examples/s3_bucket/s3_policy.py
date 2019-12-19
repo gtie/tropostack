@@ -6,16 +6,16 @@ from troposphere import Output, Export, Sub, GetAtt, Join
 from troposphere import s3
 import boto3.s3
 
-from tropostack.base import ZeroConfStack
-from tropostack.cli import ZeroConfCLI
+from tropostack.base import InlineConfStack
+from tropostack.cli import InlineConfCLI
 
-class S3BucketStack(ZeroConfStack):
+class S3BucketStack(InlineConfStack):
     """
     """
     # Base name for all instances of that same stack
     BASE_NAME = 'example-s3-stack'
     
-    # Since this stack is declared as ZeroConf - no external configuration -
+    # Since this stack is declared as InlineConf - no external configuration -
     # we add any settings as part of the class itself
     CONF = {
         'region': 'eu-west-1',
@@ -70,7 +70,7 @@ class S3BucketStack(ZeroConfStack):
             }
         )
 
-class AugmentedCLI(ZeroConfCLI):
+class AugmentedCLI(InlineConfCLI):
     """
     Extend the default set of CLI commands with a custom one.
     """
