@@ -1,0 +1,117 @@
+.. image:: https://img.shields.io/pypi/v/tropostack.svg
+   :target: https://pypi.org/project/tropostack/
+   :alt: pypi version
+
+.. image:: https://img.shields.io/travis/gtie/tropostack/master.svg?label=Build
+   :target: https://travis-ci.org/gtie/tropostack
+   :alt: travis build status
+
+About
+=====
+
+Tropostack is a CLI/workflow library that simplifies the creation and management
+of `CloudFormation <https://aws.amazon.com/cloudformation/>`_ stacks, based on
+the excellent `Troposphere Project <https://github.com/cloudtools/troposphere>`_.
+
+Tropostack features:
+ - Single stack template = single executable Python file = single CLI
+ - Support for different configuration and CLI plugins
+ - A collection of generic commands available to each stack (e.g. `create`)
+ - Support for user-defined CLI commands (e.g. `upscale`)
+ - Helper routines (e.g. locate the newest matching AMI)
+
+Docs
+----
+Full docs are at https://tropostack.readthedocs.io/en/latest/
+
+Installation
+------------
+
+.. code:: sh
+
+    $ pip install tropostack
+
+Or, you can use setup.py to install from a cloned repository:
+
+.. code:: sh
+
+    $ python setup.py install
+
+
+First stack
+---------------
+
+You use `tropostack` as a library to:
+ - Consisteny define CloudFormation templates in Python code
+ - Have a CLI around each stack definition, enabling it to live as a standalone executable
+
+Here is a minimalistic example of a stack that creates an S3 bucket, and exports the ARN as an Output:
+
+.. literalinclude:: ./examples/s3_bucket/s3_minimal.py
+   :language: python
+
+
+The above already gives you a usable CLI around your stack definition.
+
+Assuming you put it inside an executable file called `s3_minimal.py`, you'd be able to call it already:
+
+.. code-block:: bash
+
+   $ ./s3_minimal.py -h
+   usage: s3_minimal.py [-h]
+                        {apply,create,delete,generate,outputs,update,validate}
+
+   positional arguments:
+     {apply,create,delete,generate,outputs,update,validate}
+
+   optional arguments:
+     -h, --help            show this help message and exit
+
+
+Assuming
+`AWS credentials are present <https://boto3.amazonaws.com/v1/documentation/api/latest/guide/configuration.html#configuring-credentials>`_
+in the environment, we can now fire up stack that would create our S3 bucket:
+
+::
+
+   $ ./s3_minimal.py create
+   Stack creation initiated for: arn:aws:cloudformation:eu-west-1:472799024263:stack/my-s3-bucket-stack/dd5e93c0-225c-11ea-93d8-0641c159a77a
+   TIMESTAMP (UTC)          RESOURCE TYPE                              RESOURCE ID                  STATUS                                   REASON
+   2019-12-19 12:41:23      AWS::CloudFormation::Stack                 my-s3-bucket-stack           CREATE_IN_PROGRESS                       User Initiated
+   2019-12-19 12:41:26      AWS::S3::Bucket                            MyBucketResource             CREATE_IN_PROGRESS
+   2019-12-19 12:41:27      AWS::S3::Bucket                            MyBucketResource             CREATE_IN_PROGRESS                       Resource creation Initiated
+   2019-12-19 12:41:48      AWS::S3::Bucket                            MyBucketResource             CREATE_COMPLETE
+   2019-12-19 12:41:50      AWS::CloudFormation::Stack                 my-s3-bucket-stack           CREATE_COMPLETE
+
+We can also inspect the stack Outputs - in this case, the ARN of the bucket:
+
+::
+
+   $ ./s3_minimal.py outputs
+   Stack is in status: CREATE_COMPLETE
+   OutputKey    OutputValue                                           Description               ExportName
+   -----------  ----------------------------------------------------  ------------------------  ----------------------------
+   BucketArn    arn:aws:s3:::472799024263-my-first-tropostack-bucket  The ARN of the S3 bucket  my-s3-bucket-stack-BucketArn
+
+
+Finally, we can clean up and have our stack deleted:
+
+::
+
+   $ ./s3_minimal.py delete
+   Destroy initiated for stack: my-s3-bucket-stack
+   TIMESTAMP (UTC)          RESOURCE TYPE                              RESOURCE ID                  STATUS                                   REASON
+   2019-12-19 12:44:59      AWS::CloudFormation::Stack                 my-s3-bucket-stack           DELETE_IN_PROGRESS                       User Initiated
+   Stack is gone: my-s3-bucket-stack (An error occurred (ValidationError) when calling the DescribeStackEvents operation: Stack [my-s3-bucket-stack] does not exist)
+
+
+Stock commands
+--------------
+While the CLI can be expanded/customized for each individual tropostack, there are several subcommands that come out of the box:
+  - `generate` - prints the resulting CloudFormation YAML to the screen
+  - `validate` - Sends the CloudFormation template to the AWS API for validation, and reports back result
+  - `create` - Initiates the stack creation (should only be used if the stack does not exist yet)
+  - `update` - Updates an existing stack (should only be used if the stack exists)
+  - `apply` - Idempotently updates or creates a stack, based on whether it exists or not
+  - `outputs` - Shows the outputs of an existing stack
+  - `delete` - Deletes an existing stack
