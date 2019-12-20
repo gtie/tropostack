@@ -29,7 +29,7 @@ setup(
     author="tie",
     author_email="tropostack@morp.org",
     description=PKG_INIT['__doc__'].strip(),
-    long_description_content_type='text/markdown',
+    long_description_content_type='text/x-rst',
     long_description=read("README.rst"),
     packages=find_packages(exclude=('tests',)),
     install_requires=[
