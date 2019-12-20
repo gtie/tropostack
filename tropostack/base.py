@@ -1,6 +1,7 @@
 from collections.abc import Iterable
 
 from troposphere import Template
+import boto3
 
 from tropostack.exceptions import InvalidStackError
 
@@ -29,6 +30,24 @@ class BaseStack():
         # consistenly require it
         if not getattr(self, 'region'):
             raise InvalidStackError("Stack configuration is missing: region")
+
+    def ami_by_location(self, location):
+        """
+        Find AMI according to the given location
+        """
+        if self.region == 'pytest' or not self.region or not location:
+            # Short-circuit if we're running a test or do not have data
+            return 'ami-notfound'
+        client = boto3.client('ec2', region_name=self.region)
+        response = client.describe_images(Filters=[
+            {'Name': 'manifest-location', 'Values': [location]},
+        ])
+        if len(response['Images']) == 0:
+            raise RuntimeError('No AMIs found with location: %s' % location)
+        if len(response['Images']) > 1:
+            raise RuntimeError('Multiple AMIs found: %s' % response['Images'])
+        return response['Images'][0]['ImageId']
+
 
     @property
     def stackname(self):
@@ -81,14 +100,14 @@ class InlineConfStack(BaseStack):
     def __init__(self, conf):
         # Use the configuration attached to the class
         super().__init__(conf=self.CONF)
-        
+
     @property
     def stackname(self):
         return self.BASE_NAME
 
 class EnvStack(BaseStack):
 
-    def __init__(self, conf):        
+    def __init__(self, conf):
         self.env = conf.get('env')
         super().__init__(conf=conf)
 
