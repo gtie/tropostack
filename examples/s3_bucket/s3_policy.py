@@ -12,13 +12,13 @@ class S3BucketStack(InlineConfStack):
     Tropostack defining an S3 bucket with optional IP-based access restriction
 
     Args:
-      allowed_cidrs (network range): IP range to allow access from.
+      allowed_cidr (str): IP CIDR range to allow access from.
         Use ``0.0.0.0/0`` to allow access from anywhere.
       bucket_name (str): The name of the S3 bucket to be created.
         Can contain AWS variables such as ``${AWS::AccountId}``
 
     Outputs:
-        BucketArn (ARN): The ARN of the created S3 bucket
+        BucketArn (str): The ARN of the created S3 bucket
     """
     # Base name for all instances of that same stack
     BASE_NAME = 'example-s3-stack'
@@ -28,7 +28,7 @@ class S3BucketStack(InlineConfStack):
     CONF = {
         'region': 'eu-west-1',
         'bucket_name': '${AWS::AccountId}-tropostack-my-test-bucket',
-        'allowed_cidrs': '0.0.0.0/0'
+        'allowed_cidr': '0.0.0.0/0'
     }
 
     # This is an Output element in the stack, as denoted by leading 'o_'
@@ -70,7 +70,7 @@ class S3BucketStack(InlineConfStack):
                         "Principal":"*",
                         "Condition":{
                             "IpAddress": {
-                                "aws:SourceIp": self.conf['allowed_cidrs']
+                                "aws:SourceIp": self.conf['allowed_cidr']
                             }
                         }
                 }]

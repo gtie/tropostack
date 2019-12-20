@@ -17,7 +17,7 @@ class MyS3BucketStack(InlineConfStack):
         Can contain AWS variables such as ``${AWS::AccountId}``
 
     Outputs:
-        BucketArn (ARN): The ARN of the created S3 bucket
+        BucketArn (str): The ARN of the created S3 bucket
     """
     # Name of the stack
     BASE_NAME = 'my-s3-bucket-stack'

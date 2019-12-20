@@ -20,7 +20,7 @@ class EC2Stack(InlineConfStack):
       vpc_id (str): VPC that the instance would be a part of
       subnet_id (str): ID of the subnet where the instance would be deployed
       ssh_key_name (str): SSH Keypair name to be associated with the instance
-      private_ip (IPv4): Static IP address of the instance. Must be available
+      private_ip (str): Static IP address of the instance. Must be available
         under the respective Subnet
       access (list of 3-tuples): List of 3 tuples to allow Ingress from,
         formatted as (Protocol, Port, Network Range). Sample value:
