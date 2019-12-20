@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
-"""
-Sample Tropostack script for defining an S3 bucket with IP-based access control
-"""
+
 from troposphere import Output, Export, Sub, GetAtt, Join
 from troposphere import s3
 import boto3.s3
@@ -11,15 +9,25 @@ from tropostack.cli import InlineConfCLI
 
 class S3BucketStack(InlineConfStack):
     """
+    Tropostack defining an S3 bucket with optional IP-based access restriction
+
+    Args:
+      allowed_cidrs (network range): IP range to allow access from.
+        Use ``0.0.0.0/0`` to allow access from anywhere.
+      bucket_name (str): The name of the S3 bucket to be created.
+        Can contain AWS variables such as ``${AWS::AccountId}``
+
+    Outputs:
+        BucketArn (ARN): The ARN of the created S3 bucket
     """
     # Base name for all instances of that same stack
     BASE_NAME = 'example-s3-stack'
-    
+
     # Since this stack is declared as InlineConf - no external configuration -
     # we add any settings as part of the class itself
     CONF = {
         'region': 'eu-west-1',
-        'bucket_name': 'tropostack-my-test-bucket',
+        'bucket_name': '${AWS::AccountId}-tropostack-my-test-bucket',
         'allowed_cidrs': '0.0.0.0/0'
     }
 
@@ -43,7 +51,7 @@ class S3BucketStack(InlineConfStack):
         return s3.Bucket(
             'S3Bucket',
             # Bucket name comes from configuraion file
-            BucketName=self.conf['bucket_name'],
+            BucketName=Sub(self.conf['bucket_name']),
         )
 
     @property
@@ -72,17 +80,17 @@ class S3BucketStack(InlineConfStack):
 
 class AugmentedCLI(InlineConfCLI):
     """
-    Extend the default set of CLI commands with a custom one.
+    Extend the default set of CLI commands to add a custom action.
     """
     # Create a custom command, but part of the Tropostack script
     def cmd_purge(self):
         """
-        Delete all objects inside the S3 bucket.
+        Delete all objects inside the S3 bucket, along with the bucket itself.
         """
         # Retrieve the name directly from the generated stack
         bucket_name = self.stack.r_bucket.BucketName
         bucket = boto3.resource('s3').Bucket(bucket_name)
-       
+
         try:
             print('Deleting all objects in bucket: {}'.format(bucket_name))
             bucket.objects.all().delete()

@@ -1,9 +1,5 @@
 #!/usr/bin/env python3
 
-"""
-Near-minimal S3 bucket creation stack
-"""
-
 from troposphere import s3
 from troposphere import Output, Export, Sub, GetAtt
 
@@ -12,7 +8,17 @@ from tropostack.cli import InlineConfCLI
 
 
 class MyS3BucketStack(InlineConfStack):
-    """Class docstring"""
+    """
+    Minimal S3 bucket creation class. Single stack per region - no
+    environment/release variation.
+
+    Args:
+      bucket_name (str): The name of the S3 bucket to be created.
+        Can contain AWS variables such as ``${AWS::AccountId}``
+
+    Outputs:
+        BucketArn (ARN): The ARN of the created S3 bucket
+    """
     # Name of the stack
     BASE_NAME = 'my-s3-bucket-stack'
 
@@ -21,7 +27,7 @@ class MyS3BucketStack(InlineConfStack):
         # Region is always explicitly required
         'region': 'eu-west-1',
         # Prefix the bucket name with the account ID
-        'bucket_name': Sub('${AWS::AccountId}-my-first-tropostack-bucket')
+        'bucket_name': '${AWS::AccountId}-my-first-tropostack-bucket'
     }
 
     # Stack Resources are defined as class properties prefixed with 'r_'
@@ -29,7 +35,7 @@ class MyS3BucketStack(InlineConfStack):
     def r_bucket(self):
         return s3.Bucket(
             'MyBucketResource',
-            BucketName=self.conf['bucket_name']
+            BucketName=Sub(self.conf['bucket_name'])
         )
 
     # Stack Outputs are defined as class properties prefixed with 'o_'
