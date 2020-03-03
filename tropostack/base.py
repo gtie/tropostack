@@ -103,7 +103,8 @@ class InlineConfStack(BaseStack):
 
     @property
     def stackname(self):
-        return self.BASE_NAME
+        """Name can be parametrized on the passed conf"""
+        return self.BASE_NAME.format(**self.conf)
 
 class EnvStack(BaseStack):
 
