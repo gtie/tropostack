@@ -4,7 +4,7 @@ from troposphere import s3
 from troposphere import Output, Export, Sub, GetAtt
 
 from tropostack.base import InlineConfStack
-from tropostack.cli import InlineConfCLI
+from tropostack.cli import InlineConfOvrdCLI
 
 
 class MyS3BucketStack(InlineConfStack):
@@ -54,5 +54,5 @@ class MyS3BucketStack(InlineConfStack):
 
 if __name__ == '__main__':
     # Wrap the stack in a CLI and run it
-    cli = InlineConfCLI(MyS3BucketStack)
+    cli = InlineConfOvrdCLI(MyS3BucketStack)
     cli.run()

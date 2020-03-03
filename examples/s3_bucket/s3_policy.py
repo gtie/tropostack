@@ -5,7 +5,7 @@ from troposphere import s3
 import boto3.s3
 
 from tropostack.base import InlineConfStack
-from tropostack.cli import InlineConfCLI
+from tropostack.cli import InlineConfOvrdCLI
 
 class S3BucketStack(InlineConfStack):
     """
@@ -78,7 +78,7 @@ class S3BucketStack(InlineConfStack):
             }
         )
 
-class AugmentedCLI(InlineConfCLI):
+class AugmentedCLI(InlineConfOvrdCLI):
     """
     Extend the default set of CLI commands to add a custom action.
     """

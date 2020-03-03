@@ -5,7 +5,7 @@ from troposphere import s3
 from troposphere import iam
 
 from tropostack.base import InlineConfStack
-from tropostack.cli import InlineConfCLI
+from tropostack.cli import InlineConfOvrdCLI
 
 class S3UserStack(InlineConfStack):
     """
@@ -86,5 +86,5 @@ class S3UserStack(InlineConfStack):
         )
 
 if __name__ == '__main__':
-    cli = InlineConfCLI(S3UserStack)
+    cli = InlineConfOvrdCLI(S3UserStack)
     cli.run()

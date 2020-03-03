@@ -213,6 +213,39 @@ class InlineConfCLI():
             self.cmd_create()
 
 
+class InlineConfOvrdCLI():
+    """
+    TropostackCLI that uses a class-level configration, but accpets overrides
+    as command-line arguments.
+    """
+    _CMD_PREFIX = 'cmd_'
+
+    def __init__(self, stack_cls):
+        """Initialize the class and te_terun it as a CLI command"""
+        # Parse the CLI arguments
+        self.args = self.argparser().parse_args()
+        # Use command-line values as initial config
+        overrides = {k: v for k,v in self.args.conf}
+        for arg in self.args.conf:
+            kv = arg.split('=', 1)
+            k = kv[0]
+            v = kv[1] if len(kv) == 1 else None
+            overrides[k] = v
+        # Instantiate the Tropostack instance
+        self.stack = stack_cls(conf=overrides)
+        # Save a shortcut to the stack name
+        self.stackname = self.stack.stackname
+        # Save the command method picked via CLI
+        self.run_method = getattr(self, self._CMD_PREFIX + self.args.command)
+
+    # CLI Management
+    def argparser(self):
+        parser = super().argparser()
+        #  Add a multi-value config override parameter
+        parser.add_argument('--conf', action='append',
+                            help='Override conf variables: --conf foo=bar')
+        return parser
+
 class EnvCLI(InlineConfCLI):
     CONF_FUNC = partitioned_yaml_loader
 

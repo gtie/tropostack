@@ -98,8 +98,8 @@ class BaseStack():
 class InlineConfStack(BaseStack):
     CONF = {}
     def __init__(self, conf):
-        # Use the configuration attached to the class
-        super().__init__(conf=self.CONF)
+        # Override the class CONF with any passed-in config dict
+        super().__init__(conf={** self.CONF, ** conf})
 
     @property
     def stackname(self):
