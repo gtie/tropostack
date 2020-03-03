@@ -213,23 +213,22 @@ class InlineConfCLI():
             self.cmd_create()
 
 
-class InlineConfOvrdCLI():
+class InlineConfOvrdCLI(InlineConfCLI):
     """
     TropostackCLI that uses a class-level configration, but accpets overrides
     as command-line arguments.
     """
-    _CMD_PREFIX = 'cmd_'
 
     def __init__(self, stack_cls):
         """Initialize the class and te_terun it as a CLI command"""
         # Parse the CLI arguments
         self.args = self.argparser().parse_args()
         # Use command-line values as initial config
-        overrides = {k: v for k,v in self.args.conf}
+        overrides = {}
         for arg in self.args.conf:
             kv = arg.split('=', 1)
             k = kv[0]
-            v = kv[1] if len(kv) == 1 else None
+            v = kv[1] if len(kv) == 2 else None
             overrides[k] = v
         # Instantiate the Tropostack instance
         self.stack = stack_cls(conf=overrides)
