@@ -241,7 +241,7 @@ class InlineConfOvrdCLI(InlineConfCLI):
     def argparser(self):
         parser = super().argparser()
         #  Add a multi-value config override parameter
-        parser.add_argument('--conf', action='append',
+        parser.add_argument('--conf', action='append', default = [],
                             help='Override conf variables: --conf foo=bar')
         return parser
 
